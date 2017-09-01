@@ -15,7 +15,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
 
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
-        // Override point for customization after application launch.
+        // create our main window
+        self.window = UIWindow.init(frame: UIScreen.main.bounds)
+        self.window?.backgroundColor = UIColor.white
+        
+        // set the main table VC as our root controller
+        // Actually we probably want to nest in a NavController here so user can drill down to a detail view for each feed item
+        self.window?.rootViewController = ViewController()
+        
+        self.window?.makeKeyAndVisible()
+        
         return true
     }
 
