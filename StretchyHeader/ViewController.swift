@@ -108,7 +108,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             if let headView = tableView.tableHeaderView{
                 //var newTransform = CGAffineTransform.identity
                 var newTransform = self.rootTransform
-                // Center in new space; should be half the distance, but 80% works?
+                // Center in new space; should be 50% the distance, but 80% works?
                 //newTransform = newTransform.translatedBy(x: 0.0, y: (scrollView.contentOffset.y / 2.0))
                 newTransform = newTransform.translatedBy(x: 0.0, y: (scrollView.contentOffset.y * 0.8))
                 // Scale to new size
