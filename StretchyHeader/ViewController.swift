@@ -15,11 +15,10 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
     let myIdentifier = "stretchCell";
     var rootTransform = CGAffineTransform.identity
     var stretchyImageView = UIImageView()
+    var startRatio: CGFloat = 0.0
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        self.view.backgroundColor = UIColor.white
         
         // Set up table
         self.tableView.frame = self.view.bounds
@@ -36,9 +35,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if let headImage = UIImage(named: "biker.jpg"){
             // scale factor for original image
             let imageRatio = self.view.bounds.width / headImage.size.width
+            self.startRatio = 1.0 / imageRatio
             // Header container view
             let headView = UIView(frame: CGRect(x: 0, y: 0, width: self.view.bounds.width, height: imageRatio * headImage.size.height))
             headView.clipsToBounds = false
+            headView.backgroundColor = UIColor.red
             // ClippingView to hold transformed image
             let clipYOffset = headView.bounds.size.height - self.view.bounds.height
             let maxView = UIView(frame: CGRect(x: 0, y: clipYOffset, width: self.view.bounds.width, height: self.view.bounds.height))
@@ -62,6 +63,7 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
             headView.addSubview(maxView)
             self.tableView.tableHeaderView = headView
         }
+        
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -106,11 +108,11 @@ class ViewController: UIViewController, UITableViewDelegate, UITableViewDataSour
         if scrollView.contentOffset.y < 0 {
             // Zoom image to fit
             if let headView = tableView.tableHeaderView{
+                // I think the math will be cleaner if we restart from identity each time...
                 //var newTransform = CGAffineTransform.identity
                 var newTransform = self.rootTransform
-                // Center in new space; should be 50% the distance, but 80% works?
-                //newTransform = newTransform.translatedBy(x: 0.0, y: (scrollView.contentOffset.y / 2.0))
-                newTransform = newTransform.translatedBy(x: 0.0, y: (scrollView.contentOffset.y * 0.8))
+                // Center in new space, half scroll distance and compensate for starting transform
+                newTransform = newTransform.translatedBy(x: 0.0, y: (scrollView.contentOffset.y * 0.5) * self.startRatio)
                 // Scale to new size
                 let startHeight = headView.bounds.height
                 let newHeight = startHeight - scrollView.contentOffset.y
